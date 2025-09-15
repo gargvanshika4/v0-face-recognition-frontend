@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useRef, useCallback } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,18 +7,18 @@ import { Progress } from "@/components/ui/progress"
 import { Upload, ImageIcon, X, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-interface ImageUploadProps {
-  onImageSelect: (imageData: string) => void
-  isProcessing: boolean
-}
-
-export function ImageUpload({ onImageSelect, isProcessing }: ImageUploadProps) {
+/**
+ * @param {Object} props
+ * @param {function(string): void} props.onImageSelect - Callback when image is selected
+ * @param {boolean} props.isProcessing - Whether image is being processed
+ */
+export function ImageUpload({ onImageSelect, isProcessing }) {
   const [dragActive, setDragActive] = useState(false)
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [fileName, setFileName] = useState<string>("")
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [fileName, setFileName] = useState("")
+  const fileInputRef = useRef(null)
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
+  const handleDrag = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -30,7 +28,7 @@ export function ImageUpload({ onImageSelect, isProcessing }: ImageUploadProps) {
     }
   }, [])
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleDrop = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
@@ -40,14 +38,14 @@ export function ImageUpload({ onImageSelect, isProcessing }: ImageUploadProps) {
     }
   }, [])
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e) => {
     e.preventDefault()
     if (e.target.files && e.target.files[0]) {
       handleFile(e.target.files[0])
     }
   }, [])
 
-  const handleFile = (file: File) => {
+  const handleFile = (file) => {
     // Validate file type
     const validTypes = ["image/jpeg", "image/jpg", "image/png"]
     if (!validTypes.includes(file.type)) {
@@ -66,7 +64,7 @@ export function ImageUpload({ onImageSelect, isProcessing }: ImageUploadProps) {
     // Convert to base64
     const reader = new FileReader()
     reader.onload = (e) => {
-      const result = e.target?.result as string
+      const result = e.target?.result
       setSelectedImage(result)
     }
     reader.readAsDataURL(file)
